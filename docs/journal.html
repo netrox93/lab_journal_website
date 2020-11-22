@@ -410,34 +410,82 @@ div.tocify {
 </div>
 
 
-<p><strong>IMPORTANT:</strong> You can delete everything in here and start fresh. You might want to start by not deleting anything above this line until you know what that stuff is doing.</p>
-<p>This is an <code>.Rmd</code> file. It is plain text with special features. Any time you write just like this, it will be compiled to normal text in the website. If you put a # in front of your text, it will create a top level-header.</p>
-<div id="my-first-post" class="section level1">
-<h1><span class="header-section-number">1</span> My first post</h1>
-<p>Last compiled: 2020-11-21</p>
-<p>Notice that whatever you define as a top level header, automatically gets put into the table of contents bar on the left.</p>
-<div id="second-level-header" class="section level2">
-<h2><span class="header-section-number">1.1</span> Second level header</h2>
-<p>You can add more headers by adding more hashtags. These won’t be put into the table of contents</p>
-<div id="third-level-header" class="section level3">
-<h3><span class="header-section-number">1.1.1</span> third level header</h3>
-<p>Here’s an even lower level header</p>
-</div>
-</div>
-</div>
-<div id="my-second-post-note-the-order" class="section level1">
-<h1><span class="header-section-number">2</span> My second post (note the order)</h1>
-<p>Last compiled: 2020-11-21</p>
-<p>I’m writing this tutorial going from the top down. And, this is how it will be printed. So, notice the second post is second in the list. If you want your most recent post to be at the top, then make a new post starting at the top. If you want the oldest first, do, then keep adding to the bottom</p>
-</div>
-<div id="adding-r-stuff" class="section level1">
-<h1><span class="header-section-number">3</span> Adding R stuff</h1>
-<p>So far this is just a blog where you can write in plain text and serve your writing to a webpage. One of the main purposes of this lab journal is to record your progress learning R. The reason I am asking you to use this process is because you can both make a website, and a lab journal, and learn R all in R-studio. This makes everything really convenient and in the same place.</p>
-<p>So, let’s say you are learning how to make a histogram in R. For example, maybe you want to sample 100 numbers from a normal distribution with mean = 0, and standard deviation = 1, and then you want to plot a histogram. You can do this right here by using an r code block, like this:</p>
-<pre class="r"><code>samples &lt;- rnorm(100, mean=0, sd=1)
-hist(samples)</code></pre>
-<p><img src="journal_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<p>When you knit this R Markdown document, you will see that the histogram is printed to the page, along with the R code. This document can be set up to hide the R code in the webpage, just delete the comment (hashtag) from the cold folding option in the yaml header up top. For purposes of letting yourself see the code, and me see the code, best to keep it the way that it is. You’ll learn that all of these things and more can be customized in each R code block.</p>
+<div id="my-first-challange" class="section level1">
+<h1><span class="header-section-number">1</span> My first Challange</h1>
+<p>Last compiled: 2020-11-22</p>
+<p>The sales data of a company in the bicycle sales sector were analyzed for the period from 2015 to 2019 and the results were presented in diagrams. The sales in different categories were considered, as well as the sales that were made across the Federal Republic of Germany. These sales were shown across states and cities.</p>
+<pre class="r"><code># 1.0 Load libraries ----
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(writexl)
+
+# 2.0 Importing Files ----
+bikes_tbl      &lt;- read_excel(path = &quot;DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx&quot;)
+orderlines_tbl &lt;- read_excel(&quot;DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx&quot;)
+bikeshops_tbl  &lt;- read_excel(&quot;DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx&quot;)
+# 3.0 Examining Data ----
+
+
+# 4.0 Joining Data ----
+bike_orderlines_joined_tbl &lt;- orderlines_tbl %&gt;%
+  left_join(bikes_tbl, by = c(&quot;product.id&quot; = &quot;bike.id&quot;)) %&gt;%
+  left_join(bikeshops_tbl, by = c(&quot;customer.id&quot; = &quot;bikeshop.id&quot;))
+
+#6.3 Sales by State
+sales_by_state_tbl &lt;- bike_orderlines_wrangled_tbl %&gt;%
+  select(order_date, total_price, state) %&gt;%
+  mutate(year = year(order_date)) %&gt;%
+  group_by(year, state) %&gt;%
+  summarise(sales = sum(total_price)) %&gt;%
+  ungroup() %&gt;%
+  mutate(sales_text = scales::dollar(sales, big.mark = &quot;.&quot;, 
+                                     decimal.mark = &quot;,&quot;, 
+                                     prefix = &quot;&quot;, 
+                                     suffix = &quot; €&quot;))
+
+sales_by_state_tbl %&gt;%
+  ggplot(aes(x = year, y = sales, fill = state)) +
+  geom_col() +
+  facet_wrap(~ state) +
+  scale_y_continuous(labels = scales::dollar_format(big.mark = &quot;.&quot;, 
+                                                    decimal.mark = &quot;,&quot;, 
+                                                    prefix = &quot;&quot;, 
+                                                    suffix = &quot; €&quot;)) +
+  labs(
+    title = &quot;Revenue by year and States&quot;,
+    subtitle = &quot;&quot;,
+    fill = &quot;&quot; # Changes the legend name
+    + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    )</code></pre>
+<p><img src="journal_files/figure-html/plot-1.png" width="960" /></p>
+<pre class="r"><code>#6.4 Sales by City
+sales_by_city_tbl &lt;- bike_orderlines_wrangled_tbl %&gt;%
+  select(order_date, total_price, city) %&gt;%
+  mutate(year = year(order_date)) %&gt;%
+  group_by(year, city) %&gt;%
+  summarise(sales = sum(total_price)) %&gt;%
+  ungroup() %&gt;%
+  mutate(sales_text = scales::dollar(sales, big.mark = &quot;.&quot;, 
+                                     decimal.mark = &quot;,&quot;, 
+                                     prefix = &quot;&quot;, 
+                                     suffix = &quot; €&quot;))
+
+sales_by_city_tbl %&gt;%
+  ggplot(aes(x = year, y = sales, fill = city)) +
+  geom_col() +
+  facet_wrap(~ city) +
+  scale_y_continuous(labels = scales::dollar_format(big.mark = &quot;.&quot;, 
+                                                    decimal.mark = &quot;,&quot;, 
+                                                    prefix = &quot;&quot;, 
+                                                    suffix = &quot; €&quot;)) +
+  labs(
+    title = &quot;Revenue by year and Cities&quot;,
+    subtitle = &quot;&quot;,
+    fill = &quot;&quot; # Changes the legend name
+    + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    )</code></pre>
+<p><img src="journal_files/figure-html/plot-2.png" width="960" /></p>
 </div>
 
 
