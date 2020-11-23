@@ -17,7 +17,7 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
 
 
-# My first Challange
+#Chapter 2 -- first Challange
 
 Last compiled: `r Sys.Date()`
 
