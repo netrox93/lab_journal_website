@@ -37,3 +37,7 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+DS_101/02_data_wrangling/assignee.tsv
+DS_101/02_data_wrangling/patent.tsv
+DS_101/02_data_wrangling/patent_assignee.tsv
+DS_101/02_data_wrangling/uspc.tsv

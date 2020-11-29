@@ -98,8 +98,10 @@ sales_by_city_tbl %>%
     )
 ```
 #Chapter 3
-Data Aquisition via an API
-I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until today
+Last compiled: `r Sys.Date()`
+
+Data Aquisition via an API.
+I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until today.
 ```{Chapter 2}
 library(httr)
 library(jsonlite)
