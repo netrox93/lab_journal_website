@@ -45,3 +45,4 @@ docs/DS_101/02_data_wrangling/assignee.tsv
 docs/DS_101/02_data_wrangling/patent.tsv
 docs/DS_101/02_data_wrangling/patent_assignee.tsv
 docs/DS_101/02_data_wrangling/uspc.tsv
+*.tsv

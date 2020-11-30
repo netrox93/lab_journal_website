@@ -101,8 +101,8 @@ sales_by_city_tbl %>%
 Last compiled: `r Sys.Date()`
 
 Data Aquisition via an API.
-I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until today.
-```{Chapter 2}
+I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until  The Data is presented as a list with the Year in one column and the produced electricity in gigawatthours in the second column.
+```{Chapter 3}
 library(httr)
 library(jsonlite)
 library(tidyverse)
@@ -137,17 +137,133 @@ dataset data
 [18,] "2001-12-31" "586.4115"    
 [19,] "2000-12-31" "576.556"     
 [20,] "1999-12-31" "556.301"     
-[21,] "1998-12-31" "557.217"     
-[22,] "1997-12-31" "552.324"     
-[23,] "1996-12-31" "552.669"     
-[24,] "1995-12-31" "536.821"     
-[25,] "1994-12-31" "528.4692"    
-[26,] "1993-12-31" "527.118"     
-[27,] "1992-12-31" "538.1657"    
-[28,] "1991-12-31" "540.222"     
-[29,] "1990-12-31" "549.9"       
-[30,] "1989-12-31" "559.873"     
-[31,] "1988-12-31" "549.492"     
-[32,] "1987-12-31" "532.442"     
-[33,] "1986-12-31" "523.557"     
-[34,] "1985-12-31" "522.534"  
+.....  
+
+#Chapter 4
+
+ For the solution of Chapter 4 i preferred the dplyr package. At first all the data neets to be imported. I used the vroom package for doing this.
+```{r,eval=FALSE}
+library(vroom)
+library(tidyverse)
+library(lubridate)
+library(data.table)
+
+#import assignee Table
+col_types_assignee <- list(
+  id = col_character(),
+  type = col_double(),
+  name_first = col_character(),
+  name_last = col_character(),
+  organization = col_character()
+)
+
+assignee_tbl <- vroom(
+  file       = "assignee.tsv", 
+  delim      = "\t", 
+  col_types  = col_types_assignee,
+  na         = c("", "NA", "NULL")
+)
+#import patent_assignee table
+col_types_patent_assignee <- list(
+  patent_id = col_character(),
+  assignee_id = col_character(),
+  location_id = col_character()
+)
+
+patent_assignee_tbl <- vroom(
+  file       = "patent_assignee.tsv", 
+  delim      = "\t", 
+  col_types  = col_types_patent_assignee,
+  na         = c("", "NA", "NULL")
+)
+
+#import patent table
+col_types_patents <- list(
+  id = col_character(),
+  type = col_character(),
+  number = col_character(),
+  country = col_character(),
+  date = col_date("%Y-%m-%d"),
+  abstract = col_character(),
+  title = col_character(),
+  kind = col_character(),
+  num_claims = col_double(),
+  filename = col_character(),
+  withdrawn = col_double()
+)
+
+patent_tbl <- vroom(
+  file       = "patent.tsv", 
+  delim      = "\t", 
+  col_types  = col_types_patents,
+  na         = c("", "NA", "NULL")
+)
+
+```
+After importing the Data. It needs to be reshaped and joint. Because I need som colums of every dataset but not all of them for the Solution.
+
+The first task is to find out which company has the most patents in the US.
+```{r,eval=FALSE}
+# first attend with dplyr
+#sort the patent table by the assignees with the most patents
+patent_summary_tbl <- patent_assignee_tbl %>% select(patent_id,assignee_id)
+
+most_patents <- patent_summary_tbl %>% 
+  group_by(assignee_id) %>%
+  summarise(
+    count = n()
+  ) %>%
+  ungroup() %>%
+  arrange(desc(count))
+
+assignee_summary_tbl<-assignee_tbl %>% select(id,organization)
+
+#save only the first 5000 assignees with the most patents ant join the Companies
+#to the assignee IDs
+most_patents <- most_patents %>%
+  slice(1:(nrow(.)/100)) %>%
+  left_join(y=assignee_summary_tbl,  by = c("assignee_id"="id"))
+most_patents %>% select(count,organization)
+
+```
+List of the companies with the most total patents:
+
+ count organization                               
+    <int> <chr>                                      
+ 1 139091 International Business Machines Corporation
+ 2  93561 Samsung Electronics Co., Ltd.              
+ 3  75909 Canon Kabushiki Kaisha                     
+ 4  54342 Sony Corporation                           
+ 5  49442 Kabushiki Kaisha Toshiba                   
+ 6  47121 General Electric Company                   
+ 7  45374 Hitachi, Ltd.                              
+ 8  42156 Intel Corporation                          
+ 9  37196 Fujitsu Limited                            
+10  35572 Hewlett-Packard Development Company, L.P.  
+
+
+The second task is to find out which company handed in the most patents in 2019.
+```{r,eval=FALSE}
+patent_summary_2019 <- patent_tbl %>% 
+  select(id,date) %>%
+  mutate(year=year(date)) %>%
+  mutate(amount=1)%>%
+  left_join(y=patent_summary_tbl,  by = c("id"="patent_id")) %>%
+  left_join(y=assignee_summary_tbl,  by = c("assignee_id"="id"))
+glimpse(patent_summary_2019)
+
+class(patent_summary_2019)
+setDT(patent_summary_2019)
+list_2019 <- patent_summary_2019[year == 2019,sum(amount),organization] 
+list_2019 %>% arrange(desc(V1))
+
+
+```
+List of the companies with the most patents in 2019:
+                            organization    V1
+1:                                        <NA> 28824
+2: International Business Machines Corporation  9265
+3:               Samsung Electronics Co., Ltd.  7205
+4:                      Canon Kabushiki Kaisha  3595
+5:                           Intel Corporation  3526
+

@@ -80,17 +80,18 @@ glimpse(most_patents)
 
 ###########################
 
+patent_summary_2019 <- patent_tbl %>% 
+  select(id,date) %>%
+  mutate(year=year(date)) %>%
+  mutate(amount=1)%>%
+  left_join(y=patent_summary_tbl,  by = c("id"="patent_id")) %>%
+  left_join(y=assignee_summary_tbl,  by = c("assignee_id"="id"))
+glimpse(patent_summary_2019)
 
-
+class(patent_summary_2019)
+setDT(patent_summary_2019)
+list_2019 <- patent_summary_2019[year == 2019,sum(amount),organization] 
+glimpse(most_patents)
 
 ########### second attend with data.table ############
 
-class(patent_tbl)
-setDT(patent_tbl)
-class(assignee_tbl)
-setDT(assignee_tbl)
-class(patent_assignee_tbl)
-
-combined_data <- merge(x=patent_tbl, y = patent_assignee_tbl,
-                       by = "id")
-combined_data %>% glimpse()

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Tobias Tiedemann" />
+
+<meta name="date" content="2020-11-21" />
+
+<title>Journal (reproducible report)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MyLabJournal</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="journal.html">Journal</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Class notes
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="dictionary.html">Dictionary</a>
+    </li>
+    <li>
+      <a href="data_wrangling.html">Data Wrangling</a>
+    </li>
+    <li>
+      <a href="ggplot_graphs.html">ggplot graphs</a>
+    </li>
+    <li>
+      <a href="machine_learning.html">machine learning</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="links.html">Links</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Journal (reproducible report)</h1>
+<h4 class="author">Tobias Tiedemann</h4>
+<h4 class="date">2020-11-21</h4>
+
+</div>
+
+
+<p>#Chapter 2 – first Challange</p>
+<p>Last compiled: 2020-11-30</p>
+<p>The sales data of a company in the bicycle sales sector were analyzed for the period from 2015 to 2019 and the results were presented in diagrams. The sales in different categories were considered, as well as the sales that were made across the Federal Republic of Germany. These sales were shown across states and cities.</p>
+<pre class="r"><code># 1.0 Load libraries ----
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(writexl)
+
+# 2.0 Importing Files ----
+bikes_tbl      &lt;- read_excel(path = &quot;DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx&quot;)
+orderlines_tbl &lt;- read_excel(&quot;DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx&quot;)
+bikeshops_tbl  &lt;- read_excel(&quot;DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx&quot;)
+# 3.0 Examining Data ----
+
+
+# 4.0 Joining Data ----
+bike_orderlines_joined_tbl &lt;- orderlines_tbl %&gt;%
+  left_join(bikes_tbl, by = c(&quot;product.id&quot; = &quot;bike.id&quot;)) %&gt;%
+  left_join(bikeshops_tbl, by = c(&quot;customer.id&quot; = &quot;bikeshop.id&quot;))
+
+#6.3 Sales by State
+sales_by_state_tbl &lt;- bike_orderlines_wrangled_tbl %&gt;%
+  select(order_date, total_price, state) %&gt;%
+  mutate(year = year(order_date)) %&gt;%
+  group_by(year, state) %&gt;%
+  summarise(sales = sum(total_price)) %&gt;%
+  ungroup() %&gt;%
+  mutate(sales_text = scales::dollar(sales, big.mark = &quot;.&quot;, 
+                                     decimal.mark = &quot;,&quot;, 
+                                     prefix = &quot;&quot;, 
+                                     suffix = &quot; €&quot;))
+
+sales_by_state_tbl %&gt;%
+  ggplot(aes(x = year, y = sales, fill = state)) +
+  geom_col() +
+  facet_wrap(~ state) +
+  scale_y_continuous(labels = scales::dollar_format(big.mark = &quot;.&quot;, 
+                                                    decimal.mark = &quot;,&quot;, 
+                                                    prefix = &quot;&quot;, 
+                                                    suffix = &quot; €&quot;)) +
+  labs(
+    title = &quot;Revenue by year and States&quot;,
+    subtitle = &quot;&quot;,
+    fill = &quot;&quot; # Changes the legend name
+    + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    )</code></pre>
+<p><img src="journal_files/figure-html/plot-1.png" width="960" /></p>
+<pre class="r"><code>#6.4 Sales by City
+sales_by_city_tbl &lt;- bike_orderlines_wrangled_tbl %&gt;%
+  select(order_date, total_price, city) %&gt;%
+  mutate(year = year(order_date)) %&gt;%
+  group_by(year, city) %&gt;%
+  summarise(sales = sum(total_price)) %&gt;%
+  ungroup() %&gt;%
+  mutate(sales_text = scales::dollar(sales, big.mark = &quot;.&quot;, 
+                                     decimal.mark = &quot;,&quot;, 
+                                     prefix = &quot;&quot;, 
+                                     suffix = &quot; €&quot;))
+
+sales_by_city_tbl %&gt;%
+  ggplot(aes(x = year, y = sales, fill = city)) +
+  geom_col() +
+  facet_wrap(~ city) +
+  scale_y_continuous(labels = scales::dollar_format(big.mark = &quot;.&quot;, 
+                                                    decimal.mark = &quot;,&quot;, 
+                                                    prefix = &quot;&quot;, 
+                                                    suffix = &quot; €&quot;)) +
+  labs(
+    title = &quot;Revenue by year and Cities&quot;,
+    subtitle = &quot;&quot;,
+    fill = &quot;&quot; # Changes the legend name
+    + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    )</code></pre>
+<p><img src="journal_files/figure-html/plot-2.png" width="960" /> #Chapter 3 Last compiled: 2020-11-30</p>
+<p>Data Aquisition via an API. I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until The Data is presented as a list with the Year in one column and the produced electricity in gigawatthours in the second column.</p>
+<pre class="chapter"><code>library(httr)
+library(jsonlite)
+library(tidyverse)
+
+resp &lt;- GET(&quot;https://www.quandl.com/api/v3/datasets/BP/ELEC_GEN_DEU.json?api_key=3fzuzvof5E_4V2rs-WWm&quot;)
+
+resp %&gt;% 
+  .$content %&gt;% 
+  rawToChar() %&gt;% 
+  fromJSON()
+  </code></pre>
+<p>dataset data [,1] [,2]<br />
+[1,] “2018-12-31” “648.7”<br />
+[2,] “2017-12-31” “653.6547”<br />
+[3,] “2016-12-31” “650.70734396” [4,] “2015-12-31” “648.14928057” [5,] “2014-12-31” “627.76510177” [6,] “2013-12-31” “638.73”<br />
+[7,] “2012-12-31” “630.149”<br />
+[8,] “2011-12-31” “613.070326”<br />
+[9,] “2010-12-31” “633.093”<br />
+[10,] “2009-12-31” “595.624”<br />
+[11,] “2008-12-31” “640.686”<br />
+[12,] “2007-12-31” “640.578”<br />
+[13,] “2006-12-31” “639.5665”<br />
+[14,] “2005-12-31” “622.575”<br />
+[15,] “2004-12-31” “617.4652”<br />
+[16,] “2003-12-31” “608.78”<br />
+[17,] “2002-12-31” “586.688”<br />
+[18,] “2001-12-31” “586.4115”<br />
+[19,] “2000-12-31” “576.556”<br />
+[20,] “1999-12-31” “556.301”<br />
+…..</p>
+<p>#Chapter 4</p>
+<p>For the solution of Chapter 4 i preferred the dplyr package. At first all the data neets to be imported. I used the vroom package for doing this.</p>
+<pre class="r"><code>library(vroom)
+library(tidyverse)
+library(lubridate)
+library(data.table)
+
+#import assignee Table
+col_types_assignee &lt;- list(
+  id = col_character(),
+  type = col_double(),
+  name_first = col_character(),
+  name_last = col_character(),
+  organization = col_character()
+)
+
+assignee_tbl &lt;- vroom(
+  file       = &quot;assignee.tsv&quot;, 
+  delim      = &quot;\t&quot;, 
+  col_types  = col_types_assignee,
+  na         = c(&quot;&quot;, &quot;NA&quot;, &quot;NULL&quot;)
+)
+#import patent_assignee table
+col_types_patent_assignee &lt;- list(
+  patent_id = col_character(),
+  assignee_id = col_character(),
+  location_id = col_character()
+)
+
+patent_assignee_tbl &lt;- vroom(
+  file       = &quot;patent_assignee.tsv&quot;, 
+  delim      = &quot;\t&quot;, 
+  col_types  = col_types_patent_assignee,
+  na         = c(&quot;&quot;, &quot;NA&quot;, &quot;NULL&quot;)
+)
+
+#import patent table
+col_types_patents &lt;- list(
+  id = col_character(),
+  type = col_character(),
+  number = col_character(),
+  country = col_character(),
+  date = col_date(&quot;%Y-%m-%d&quot;),
+  abstract = col_character(),
+  title = col_character(),
+  kind = col_character(),
+  num_claims = col_double(),
+  filename = col_character(),
+  withdrawn = col_double()
+)
+
+patent_tbl &lt;- vroom(
+  file       = &quot;patent.tsv&quot;, 
+  delim      = &quot;\t&quot;, 
+  col_types  = col_types_patents,
+  na         = c(&quot;&quot;, &quot;NA&quot;, &quot;NULL&quot;)
+)</code></pre>
+<p>After importing the Data. It needs to be reshaped and joint. Because I need som colums of every dataset but not all of them for the Solution.</p>
+<p>The first task is to find out which company has the most patents in the US.</p>
+<pre class="r"><code># first attend with dplyr
+#sort the patent table by the assignees with the most patents
+patent_summary_tbl &lt;- patent_assignee_tbl %&gt;% select(patent_id,assignee_id)
+
+most_patents &lt;- patent_summary_tbl %&gt;% 
+  group_by(assignee_id) %&gt;%
+  summarise(
+    count = n()
+  ) %&gt;%
+  ungroup() %&gt;%
+  arrange(desc(count))
+
+assignee_summary_tbl&lt;-assignee_tbl %&gt;% select(id,organization)
+
+#save only the first 5000 assignees with the most patents ant join the Companies
+#to the assignee IDs
+most_patents &lt;- most_patents %&gt;%
+  slice(1:(nrow(.)/100)) %&gt;%
+  left_join(y=assignee_summary_tbl,  by = c(&quot;assignee_id&quot;=&quot;id&quot;))
+most_patents %&gt;% select(count,organization)</code></pre>
+<p>List of the companies with the most total patents:</p>
+<p>count organization<br />
+<int> <chr><br />
+1 139091 International Business Machines Corporation 2 93561 Samsung Electronics Co., Ltd.<br />
+3 75909 Canon Kabushiki Kaisha<br />
+4 54342 Sony Corporation<br />
+5 49442 Kabushiki Kaisha Toshiba<br />
+6 47121 General Electric Company<br />
+7 45374 Hitachi, Ltd.<br />
+8 42156 Intel Corporation<br />
+9 37196 Fujitsu Limited<br />
+10 35572 Hewlett-Packard Development Company, L.P.</p>
+<p>The second task is to find out which company handed in the most patents in 2019.</p>
+<pre class="r"><code>patent_summary_2019 &lt;- patent_tbl %&gt;% 
+  select(id,date) %&gt;%
+  mutate(year=year(date)) %&gt;%
+  mutate(amount=1)%&gt;%
+  left_join(y=patent_summary_tbl,  by = c(&quot;id&quot;=&quot;patent_id&quot;)) %&gt;%
+  left_join(y=assignee_summary_tbl,  by = c(&quot;assignee_id&quot;=&quot;id&quot;))
+glimpse(patent_summary_2019)
+
+class(patent_summary_2019)
+setDT(patent_summary_2019)
+list_2019 &lt;- patent_summary_2019[year == 2019,sum(amount),organization] 
+list_2019 %&gt;% arrange(desc(V1))</code></pre>
+<p>List of the companies with the most patents in 2019: organization V1 1: <NA> 28824 2: International Business Machines Corporation 9265 3: Samsung Electronics Co., Ltd. 7205 4: Canon Kabushiki Kaisha 3595 5: Intel Corporation 3526</p>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
