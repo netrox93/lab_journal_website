@@ -15,9 +15,9 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
+#Journal
 
-
-#Chapter 2 -- first Challange
+##Chapter 2
 
 Last compiled: `r Sys.Date()`
 
@@ -97,23 +97,23 @@ sales_by_city_tbl %>%
     + theme(axis.text.x = element_text(angle = 45, hjust = 1))
     )
 ```
-#Chapter 3
+##Chapter 3
 Last compiled: `r Sys.Date()`
 
 Data Aquisition via an API.
 I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until  The Data is presented as a list with the Year in one column and the produced electricity in gigawatthours in the second column.
-```{Chapter 3}
+```{r,eval=FALSE}
 library(httr)
 library(jsonlite)
 library(tidyverse)
 
-resp <- GET("https://www.quandl.com/api/v3/datasets/BP/ELEC_GEN_DEU.json?api_key=3fzuzvof5E_4V2rs-WWm")
+resp <- GET("https://www.quandl.com/api/v3/datasets/BP/ELEC_GEN_DEU.json?api_key=---------------")
 
 resp %>% 
   .$content %>% 
   rawToChar() %>% 
   fromJSON()
-  
+resp  
 ```
 dataset data
       [,1]         [,2]          
@@ -139,8 +139,9 @@ dataset data
 [20,] "1999-12-31" "556.301"     
 .....  
 
-#Chapter 4
-
+##Chapter 4
+ Last compiled: `r Sys.Date()`
+ 
  For the solution of Chapter 4 i preferred the dplyr package. At first all the data neets to be imported. I used the vroom package for doing this.
 ```{r,eval=FALSE}
 library(vroom)
@@ -260,10 +261,16 @@ list_2019 %>% arrange(desc(V1))
 
 ```
 List of the companies with the most patents in 2019:
-                            organization    V1
-1:                                        <NA> 28824
-2: International Business Machines Corporation  9265
-3:               Samsung Electronics Co., Ltd.  7205
-4:                      Canon Kabushiki Kaisha  3595
-5:                           Intel Corporation  3526
+
+
+ count organization                               
+    <int> <chr>                                      
+ 1 28824 NA
+ 2  9265 International Business Machines Corporation              
+ 3  7205 Samsung Electronics Co., Ltd.                     
+ 4  3595 Canon Kabushiki Kaisha                           
+ 5  3526 Canon Intel Corporation      
+
+
+For the 28824 patents in 2019 wit "NA" it has to be mentioned that these are private persons who admitted the patents who dont relate to a specifiv company.
 
