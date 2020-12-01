@@ -54,6 +54,22 @@ patent_tbl <- vroom(
   na         = c("", "NA", "NULL")
 )
 
+#import uspc table
+col_types_uspc <- list(
+  uuid = col_character(),
+  patent_id = col_character(),
+  mainclass_id = col_character(),
+  subclass_id = col_character(),
+  sequence = col_double()
+)
+
+uspc_tbl <- vroom(
+  file       = "uspc.tsv", 
+  delim      = "\t", 
+  col_types  = col_types_uspc,
+  na         = c("", "NA", "NULL")
+)
+
 
 # first attend with dplyr
 #sort the patent table by the assignees with the most patents
@@ -91,7 +107,28 @@ glimpse(patent_summary_2019)
 class(patent_summary_2019)
 setDT(patent_summary_2019)
 list_2019 <- patent_summary_2019[year == 2019,sum(amount),organization] 
-glimpse(most_patents)
 
-########### second attend with data.table ############
 
+###############################
+
+companylist=list("International Business Machines Corporation", 
+                 "Samsung Electronics Co., Ltd.",
+                 "Canon Kabushiki Kaisha",
+                 "Sony Corporation",
+                 "Kabushiki Kaisha Toshiba",
+                 "General Electric Company",
+                 "Hitachi, Ltd.",
+                 "Intel Corporation",
+                 "Fujitsu Limited",
+                 "Hewlett-Packard Development Company, L.P.")
+
+uspc_mainclasses <-uspc_tbl %>%
+  select(patent_id,mainclass_id) %>%
+  left_join(y=patent_summary_tbl, by = c("patent_id"="patent_id")) %>%
+  left_join(y=assignee_summary_tbl,  by = c("assignee_id"="id")) %>%
+  group_by(mainclass_id) %>%
+  summarise(
+    count = n()
+  ) %>%
+  ungroup() %>%
+  arrange(desc(count))

@@ -9,8 +9,13 @@ output:
     collapsed: false
     number_sections: true
     toc_depth: 3
-    #code_folding: hide
+    code_folding: show
 ---
+<style>
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    background-color: #2DC6D6;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
@@ -115,6 +120,7 @@ resp %>%
   fromJSON()
 resp  
 ```
+```
 dataset data
       [,1]         [,2]          
  [1,] "2018-12-31" "648.7"       
@@ -138,7 +144,7 @@ dataset data
 [19,] "2000-12-31" "576.556"     
 [20,] "1999-12-31" "556.301"     
 .....  
-
+```
 ##Chapter 4
  Last compiled: `r Sys.Date()`
  
@@ -200,6 +206,23 @@ patent_tbl <- vroom(
   na         = c("", "NA", "NULL")
 )
 
+#import uspc table
+col_types_uspc <- list(
+  uuid = col_character(),
+  patent_id = col_character(),
+  mainclass_id = col_character(),
+  subclass_id = col_character(),
+  sequence = col_double()
+)
+
+uspc_tbl <- vroom(
+  file       = "uspc.tsv", 
+  delim      = "\t", 
+  col_types  = col_types_uspc,
+  na         = c("", "NA", "NULL")
+)
+
+
 ```
 After importing the Data. It needs to be reshaped and joint. Because I need som colums of every dataset but not all of them for the Solution.
 
@@ -228,20 +251,20 @@ most_patents %>% select(count,organization)
 
 ```
 List of the companies with the most total patents:
-
+```
  count organization                               
     <int> <chr>                                      
- 1 139091 International Business Machines Corporation
- 2  93561 Samsung Electronics Co., Ltd.              
- 3  75909 Canon Kabushiki Kaisha                     
- 4  54342 Sony Corporation                           
- 5  49442 Kabushiki Kaisha Toshiba                   
- 6  47121 General Electric Company                   
- 7  45374 Hitachi, Ltd.                              
- 8  42156 Intel Corporation                          
- 9  37196 Fujitsu Limited                            
+1 139091 International Business Machines Corporation
+2  93561 Samsung Electronics Co., Ltd.              
+3  75909 Canon Kabushiki Kaisha                     
+4  54342 Sony Corporation                           
+5  49442 Kabushiki Kaisha Toshiba                   
+6  47121 General Electric Company                   
+7  45374 Hitachi, Ltd.                              
+8  42156 Intel Corporation                          
+9  37196 Fujitsu Limited                            
 10  35572 Hewlett-Packard Development Company, L.P.  
-
+```
 
 The second task is to find out which company handed in the most patents in 2019.
 ```{r,eval=FALSE}
@@ -261,16 +284,49 @@ list_2019 %>% arrange(desc(V1))
 
 ```
 List of the companies with the most patents in 2019:
-
-
+```
  count organization                               
     <int> <chr>                                      
- 1 28824 NA
- 2  9265 International Business Machines Corporation              
- 3  7205 Samsung Electronics Co., Ltd.                     
- 4  3595 Canon Kabushiki Kaisha                           
- 5  3526 Canon Intel Corporation      
-
+1 28824 NA
+2 9265 International Business Machines Corporation              
+3 7205 Samsung Electronics Co., Ltd.                     
+4 3595 Canon Kabushiki Kaisha                           
+5 3526 Canon Intel Corporation      
+```
 
 For the 28824 patents in 2019 wit "NA" it has to be mentioned that these are private persons who admitted the patents who dont relate to a specifiv company.
 
+The third task is to find out the most innovative tech sectors by the amount of patents in the specific sector. 
+
+```{r,eval=FALSE}
+uspc_mainclasses <-uspc_tbl %>%
+  select(patent_id,mainclass_id) %>%
+  left_join(y=patent_summary_tbl, by = c("patent_id"="patent_id")) %>%
+  left_join(y=assignee_summary_tbl,  by = c("assignee_id"="id")) %>%
+  group_by(mainclass_id) %>%
+  summarise(
+    count = n()
+  ) %>%
+  ungroup() %>%
+  arrange(desc(count))
+```
+The Output of the uspc_mainclass list is the following:
+```
+mainclass_id  count
+chr         int
+1 257 450431
+2 428 443985
+3 435 391347
+4 514 344342
+5 424 297210
+``` 
+If you look up the mainclass IDs on the uspto website you can find out, that the most innovative tech secors are:
+ 
+```
+1. 257 - Active solid-state devices (e.g., transistors, solid-state diodes)
+2. 428 - Stock material or miscellaneous articles
+3. 435 - Chemistry: molecular biology and microbiology
+4. 514 - Drug, bio-affecting and body treating compositions
+5. 424 - Drug, bio-affecting and body treating compositions
+```
+ There is also a note that 514 is an integral Part of 424 which would probably effect the ranking.
