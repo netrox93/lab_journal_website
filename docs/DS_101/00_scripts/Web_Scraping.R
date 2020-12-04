@@ -21,9 +21,9 @@ html_home         <- read_html(url_home)
 bike_family_tbl <- html_home %>%
   
   # Get the nodes for the families ...
-  html_nodes(css = ".js-navigationDrawer__list--secondary") %>%
+  html_nodes(css = "main-navigation-category-with-tiles_title") %>%
   # ...and extract the information of the id attribute
-  html_attr('id') %>%
+  html_attr('item') %>% as_tibble() 
   
   # Convert vector to tibble
   enframe(name = "position", value = "family_class") %>%

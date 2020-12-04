@@ -22,7 +22,11 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 ```
 # Journal
 
-## Chapter 2
+# Chapter 1
+
+In Chapter one, all software packages and libraries have been installed.
+
+# Chapter 2
 
 Last compiled: `r Sys.Date()`
 
@@ -102,8 +106,10 @@ sales_by_city_tbl %>%
     + theme(axis.text.x = element_text(angle = 45, hjust = 1))
     )
 ```
+
 # Chapter 3
-Last compiled: `r Sys.Date()`
+
+ Last compiled: `r Sys.Date()`
 
 Data Aquisition via an API.
 I used the Quandl Data Provider to get access to their API. The Data is the Electricity generation in Germany from 1985 until  The Data is presented as a list with the Year in one column and the produced electricity in gigawatthours in the second column.
@@ -145,10 +151,52 @@ dataset data
 [20,] "1999-12-31" "556.301"     
 .....  
 ```
+The second task was to webscrape a Bike Company webside for prices and model names for at least one category of bikes.
+I tried to webscrape with the following code:
+
+```{r, eval=FALSE}
+# 1.0 LIBRARIES ----
+
+library(tidyverse) # Main Package - Loads dplyr, purrr, etc.
+library(rvest)     # HTML Hacking & Web Scraping
+library(xopen)     # Quickly opening URLs
+library(jsonlite)  # converts JSON files to R objects
+library(glue)      # concatenate strings
+library(stringi)   # character string/text processing
+
+# 1.1 COLLECT PRODUCT FAMILIES ----
+
+url_home          <- "https://www.rosebikes.de/"
+xopen(url_home) # Open links directly from RStudio to inspect them
+
+# Read in the HTML for the entire webpage
+html_home         <- read_html(url_home)
+
+# Web scrape the ids for the families
+bike_family_tbl <- html_home %>%
+  
+  # Get the nodes for the families ...
+  html_nodes(css = "main-navigation-category-with-tiles_title") %>%
+  # ...and extract the information of the id attribute
+  html_attr('item') %>% as_tibble() 
+  
+  # Convert vector to tibble
+  enframe(name = "position", value = "family_class") %>%
+  
+  # Add a hashtag so we can get nodes of the categories by id (#)
+  mutate(
+    family_id = str_glue("#{family_class}")
+  )
+
+bike_family_tbl
+```
+I always had problems finding the right expressions in the html code. I have to confess that I did not really understand the html structure of the webside. A little more introduction in html code in the script would be nice. With this little info I could not finish the second part of chapter 3.
+
+
 # Chapter 4
  Last compiled: `r Sys.Date()`
  
- For the solution of Chapter 4 i preferred the dplyr package. At first all the data neets to be imported. I used the vroom package for doing this.
+ For the solution of Chapter 4 I preferred the dplyr package. At first all the data needs to be imported. I used the vroom package for doing this.
 ```{r,eval=FALSE}
 library(vroom)
 library(tidyverse)
@@ -224,9 +272,9 @@ uspc_tbl <- vroom(
 
 
 ```
-After importing the Data. It needs to be reshaped and joint. Because I need som colums of every dataset but not all of them for the Solution.
+After importing the Data. It needs to be reshaped and joint. Because I need some colums of every dataset but not all of them for the Solution.
 
-The first task is to find out which company has the most patents in the US.
+The first task is to find out which company has the most patents in the US. The following code is presenting a list of companies arranged by the total amount of patents.
 ```{r,eval=FALSE}
 # first attend with dplyr
 #sort the patent table by the assignees with the most patents
@@ -266,7 +314,7 @@ List of the companies with the most total patents:
 10  35572 Hewlett-Packard Development Company, L.P.  
 ```
 
-The second task is to find out which company handed in the most patents in 2019.
+The second task is to find out which company handed in the most patents in 2019. This time I tried the Data.Table package.
 ```{r,eval=FALSE}
 patent_summary_2019 <- patent_tbl %>% 
   select(id,date) %>%
@@ -274,7 +322,6 @@ patent_summary_2019 <- patent_tbl %>%
   mutate(amount=1)%>%
   left_join(y=patent_summary_tbl,  by = c("id"="patent_id")) %>%
   left_join(y=assignee_summary_tbl,  by = c("assignee_id"="id"))
-glimpse(patent_summary_2019)
 
 class(patent_summary_2019)
 setDT(patent_summary_2019)
@@ -294,7 +341,7 @@ List of the companies with the most patents in 2019:
 5 3526 Canon Intel Corporation      
 ```
 
-For the 28824 patents in 2019 wit "NA" it has to be mentioned that these are private persons who admitted the patents who dont relate to a specifiv company.
+For the 28824 patents in 2019 with "NA" it has to be mentioned that these are private persons who admitted the patents who don't relate to a specific company.
 
 The third task is to find out the most innovative tech sectors by the amount of patents in the specific sector. 
 
